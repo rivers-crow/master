@@ -38,15 +38,8 @@ class IndexController extends Controller
 
     public function getphoto(Request $request){
         $fileName=$request->get('name');
-        //$file=storage_path('c7ee075dcfc3b13b88b9e653c4e0f25e.jpg');
-        //$file = '/stroage/'.$fileName;
-        //$file = Storage::disk('uploads')->get($fileName);
-        //$exists = Storage::disk('uploads')->exists($fileName);
-        return Storage::disk('uploads')->download($fileName, 'img.jpg');
+        return Storage::disk('uploads')->download($fileName, $fileName);
 
-        return Storage::download($fileName);
-        return dd($file);
-       // $fileStr = Storage::disk('public')->get($fileName);
-        return '<img src='.$file.'>';
+
     }
 }
