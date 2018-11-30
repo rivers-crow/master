@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    return '新';
+    return view('welcome');
 });
+
+Route::get('index','IndexController@index');
+Route::post('upload','IndexController@upload');
+Route::get('getphoto','IndexController@getphoto');
