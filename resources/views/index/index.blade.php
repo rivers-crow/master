@@ -13,5 +13,7 @@
         <input type="submit">
         {{ csrf_field() }}
     </form>
+
+    <img src="{{URL::asset('/uploads/ee3165bea32e59dcf0db8a55970a0854.jpg')}}" alt="" width="500">
 </body>
 </html>

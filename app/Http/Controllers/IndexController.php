@@ -38,6 +38,8 @@ class IndexController extends Controller
 
     public function getphoto(Request $request){
         $fileName=$request->get('name');
+        $url = Storage::url($fileName);
+        return $url;
         return Storage::disk('uploads')->download($fileName, $fileName);
 
 
