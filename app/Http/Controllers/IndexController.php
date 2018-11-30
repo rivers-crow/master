@@ -27,7 +27,11 @@ class IndexController extends Controller
             // 使用我们新建的uploads本地存储空间（目录）
             //这里的uploads是配置文件的名称
             $bool = Storage::disk('uploads')->put($filename, file_get_contents($realPath));
-            var_dump($bool);
+            if($bool){
+                return '上传成功';
+            }else{
+                return '上传失败';
+            }
 
         }
     }
