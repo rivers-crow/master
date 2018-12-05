@@ -1,22 +1,27 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Home;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class IndexController extends Controller
 {
     public function index(){
-        $user=Auth::user();
-
-        return view('index.index');
+        $user = Auth::user();
+        $info['name'] =$user['name'];
+        $info['email']=$user['emial'];
+        $info['uid']=$user['id'];
+        $info['files']=DB::table('pro_files')->where(['uid'=>$user['id'],'is_delete'=>0])->get(['file_url','created_at'])->map(function ($value) {
+            return (array)$value;
+        })->toArray();;
+        return view('index.index', compact('info'));
     }
 
     public function upload(Request $request){
-
-
         $file = $request->file('file');
         if ($file->isValid()) {
 
@@ -31,21 +36,26 @@ class IndexController extends Controller
             // 使用我们新建的uploads本地存储空间（目录）
             //这里的uploads是配置文件的名称
             $bool = Storage::disk('uploads')->put($filename, file_get_contents($realPath));
+            if($ext == 'zip'){
+                $data['file_type']=2;
+            }else{
+                $data['file_type']=1;
+            }
+            $data['uid']=Auth::id();
+            $data['file_url']=$filename;
+            $data['created_at']=date('Y-m-d H:i:s',time());
+            $data['is_read']=1;
             if($bool){
-                return '上传成功';
+                $result = DB::table('pro_files')->insert($data);
+                if($result){
+                    return '上传成功';
+                }else{
+                    unlink('public/upload/'.$filename);
+                }
             }else{
                 return '上传失败';
             }
 
         }
-    }
-
-    public function getphoto(Request $request){
-        $fileName=$request->get('name');
-        $url = Storage::url($fileName);
-        return $url;
-        return Storage::disk('uploads')->download($fileName, $fileName);
-
-
     }
 }
